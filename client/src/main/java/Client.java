@@ -31,20 +31,17 @@ public class Client{
 
                             switch (typeA) {
                                 case 1:
-                                System.out.println("Example: [7, 5, 6, 4, 2]");
                                 int[] array = extractIntArray(message);
                                 int[] sortedArray =  sorter.divideAndSort(array);
                                 printSortedArrayI(sortedArray);
                                 break;
 
                                 case 2:
-                                System.out.println("Example: [D, b, a, A]");
                                 String[] arrayS = extractStringArray(message);
                                 String[] sortedArrayS = sorter.divideAndSortS(arrayS);
                                 printSortedArrayS(sortedArrayS);
 
                                 case 3:
-                                System.out.println("Example: [5.5, 2.3, 5.7]");
                                 double[] arrayD = extractDoubleArray(message);
                                 double[] sortedArrayD = sorter.divideAndSortD(arrayD);
                                 printSortedArrayD(sortedArrayD);
@@ -58,7 +55,7 @@ public class Client{
                 }
             }
             else{
-                System.out.println("Incorrect type of data select");
+                System.out.println("Incorrect type of data select.");
             }
             sc.close();
             br.close();
