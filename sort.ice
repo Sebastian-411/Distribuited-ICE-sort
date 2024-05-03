@@ -10,4 +10,10 @@ module Sorting {
         IntSeqD divideAndSortD(IntSeqD arr);
         IntSeqD mergeD(IntSeqD arr1, IntSeqD arr2);
     }
+        interface SortService
+        {
+            string localSort(string array);
+            string sort(string array);
+        }
+
 }
