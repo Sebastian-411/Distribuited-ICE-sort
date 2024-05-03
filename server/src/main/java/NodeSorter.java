@@ -1,10 +1,9 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import Sorting.*;
 import com.zeroc.Ice.Current;
 
-public class SorterI implements Sorter{
+import java.util.Arrays;
+
+public class NodeSorter implements Sorter{
 
     @Override
     public int[] divideAndSort(int[] arr, Current current) {
@@ -12,9 +11,8 @@ public class SorterI implements Sorter{
             return arr;
         }
         int mid = arr.length / 2;
-
-        int[] left = connectToServer(Arrays.copyOfRange(arr, 0, mid), "Service1/2:tcp -h localhost -p 10002");
-        int[] right = connectToServer(Arrays.copyOfRange(arr, mid, arr.length), "Service2/2:tcp -h localhost -p 10003");
+        int[] left = divideAndSort(Arrays.copyOfRange(arr, 0, mid), current);
+        int[] right = divideAndSort(Arrays.copyOfRange(arr, mid, arr.length), current);
         return merge(left, right, current);
     }
 
@@ -59,7 +57,7 @@ public class SorterI implements Sorter{
         String[] right = divideAndSortS(Arrays.copyOfRange(arr, mid, arr.length), current);
         return mergeS(left, right, current);
     }
-    
+
     @Override
     public String[] mergeS(String[] arr1, String[] arr2, Current current) {
         String[] result = new String[arr1.length + arr2.length];
@@ -90,7 +88,7 @@ public class SorterI implements Sorter{
         double[] right = divideAndSortD(Arrays.copyOfRange(arr, mid, arr.length), current);
         return mergeD(left, right, current);
     }
-    
+
     @Override
     public double[] mergeD(double[] arr1, double[] arr2, Current current) {
         double[] result = new double[arr1.length + arr2.length];
