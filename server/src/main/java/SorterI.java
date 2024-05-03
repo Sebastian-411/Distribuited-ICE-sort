@@ -49,14 +49,36 @@ public class SorterI implements Sorter{
 
     }
 
+    private String[] connectToServer(String[] arr, String conf) {
+        com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize();
+        com.zeroc.Ice.ObjectPrx base = communicator.stringToProxy(conf);
+        Sorting.SorterPrx sortService = Sorting.SorterPrx.checkedCast(base);
+        if (sortService == null) {
+            throw new Error("Invalid proxy");
+        }
+        return sortService.divideAndSortS(arr);
+
+    }
+
+    private double[] connectToServer(double[] arr, String conf) {
+        com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize();
+        com.zeroc.Ice.ObjectPrx base = communicator.stringToProxy(conf);
+        Sorting.SorterPrx sortService = Sorting.SorterPrx.checkedCast(base);
+        if (sortService == null) {
+            throw new Error("Invalid proxy");
+        }
+        return sortService.divideAndSortD(arr);
+
+    }
+
     @Override
     public String[] divideAndSortS(String[] arr, Current current) {
         if (arr.length <= 1) {
             return arr;
         }
         int mid = arr.length / 2;
-        String[] left = divideAndSortS(Arrays.copyOfRange(arr, 0, mid), current);
-        String[] right = divideAndSortS(Arrays.copyOfRange(arr, mid, arr.length), current);
+        String[] left = connectToServer(Arrays.copyOfRange(arr, 0, mid), "Service1/2:tcp -h localhost -p 10002");
+        String[] right = connectToServer(Arrays.copyOfRange(arr, mid, arr.length), "Service2/2:tcp -h localhost -p 10003");
         return mergeS(left, right, current);
     }
     
@@ -86,8 +108,8 @@ public class SorterI implements Sorter{
             return arr;
         }
         int mid = arr.length / 2;
-        double[] left = divideAndSortD(Arrays.copyOfRange(arr, 0, mid), current);
-        double[] right = divideAndSortD(Arrays.copyOfRange(arr, mid, arr.length), current);
+        double[] left = connectToServer(Arrays.copyOfRange(arr, 0, mid), "Service1/2:tcp -h localhost -p 10002");
+        double[] right = connectToServer(Arrays.copyOfRange(arr, mid, arr.length), "Service2/2:tcp -h localhost -p 10003");
         return mergeD(left, right, current);
     }
     
