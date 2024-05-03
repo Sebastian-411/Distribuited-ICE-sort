@@ -15,35 +15,51 @@ public class Client{
             }
 
             Scanner sc = new Scanner(System.in);
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+            boolean flag = true;
+            while(flag){
             System.out.println("What kind of array do you want to order? Type the number: \n 1. Array of integers [7, 5, 3]" 
             + "\n 2. Array of Strings [A, b, a, D] \n 3. Array of double [2.5, 2.3, 5.0, 5.7, 5.5]");
+
             int typeA = sc.nextInt();
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            boolean flag = true;
 
             if(typeA == 1 || typeA == 2 || typeA == 3){
                 System.out.println("Type the array");
-                while(flag){
+
                     try {
                         String message = br.readLine();
                         if (isValidArray(message)) {
-                            flag = false;
-
+                            long startTime = 0;
+                            long endTime = 0;
+                            long duration = 0;
                             switch (typeA) {
                                 case 1:
                                 int[] array = extractIntArray(message);
+                                startTime = System.nanoTime();
                                 int[] sortedArray =  sorter.divideAndSort(array);
+                                endTime = System.nanoTime();
+                                duration = (endTime - startTime) / 1000000; // Convertir nanosegundos a milisegundos
+                                System.out.println("La línea tardó " + duration + " milisegundos en ejecutarse.");
                                 printSortedArrayI(sortedArray);
                                 break;
 
                                 case 2:
                                 String[] arrayS = extractStringArray(message);
+                                startTime = System.nanoTime();
                                 String[] sortedArrayS = sorter.divideAndSortS(arrayS);
+                                endTime = System.nanoTime();
+                                duration = (endTime - startTime) / 1000000; // Convertir nanosegundos a milisegundos
+                                System.out.println("La línea tardó " + duration + " milisegundos en ejecutarse.");
                                 printSortedArrayS(sortedArrayS);
 
                                 case 3:
                                 double[] arrayD = extractDoubleArray(message);
+                                startTime = System.nanoTime();
                                 double[] sortedArrayD = sorter.divideAndSortD(arrayD);
+                                endTime = System.nanoTime();
+                                duration = (endTime - startTime) / 1000000; // Convertir nanosegundos a milisegundos
+                                System.out.println("La línea tardó " + duration + " milisegundos en ejecutarse.");
                                 printSortedArrayD(sortedArrayD);
                             }    
                         } else {
@@ -51,11 +67,17 @@ public class Client{
                         }
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
-                    }   
-                }
+                    }
+                    System.out.println("Do you want to order an other array? 1. Yes 2. No");
+                    String msg = br.readLine();
+                    if(msg.equals("2")){
+                        flag = false;
+                    }
+
             }
             else{
                 System.out.println("Incorrect type of data select.");
+            }
             }
             sc.close();
             br.close();
