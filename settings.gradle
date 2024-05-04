@@ -8,3 +8,4 @@
 rootProject.name = 'ProyectoGradle'
  include 'client'
  include 'server'
+ include 'test'

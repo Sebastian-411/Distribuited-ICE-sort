@@ -4,15 +4,26 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.zeroc.Ice.ObjectPrx;
+
+import Sorting.CallbackPrx;
+
 
 public class Client{
     public static void main(String[] args){
         try(com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args)){
-            com.zeroc.Ice.ObjectPrx base = communicator.stringToProxy("SimpleSorter:tcp -h localhost -p 10001");
+            com.zeroc.Ice.ObjectPrx base = communicator.stringToProxy("SimpleSorter:tcp -h localhost -p 10000");
             Sorting.SorterPrx sorter = Sorting.SorterPrx.checkedCast(base);
             if(sorter == null){
                 throw new Error("Invalid proxy");
             }
+
+            /*com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Callback");
+            com.zeroc.Ice.Object object = new CallbackImpl();
+            ObjectPrx prx = adapter.add(object, com.zeroc.Ice.Util.stringToIdentity("CallbackService"));
+            adapter.activate();
+
+            CallbackPrx clprx = CallbackPrx.uncheckedCast(prx);*/
 
             Scanner sc = new Scanner(System.in);
             System.out.println("What kind of array do you want to order? Type the number: \n 1. Array of integers [7, 5, 3]" 

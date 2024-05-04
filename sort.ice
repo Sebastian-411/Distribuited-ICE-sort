@@ -10,4 +10,12 @@ module Sorting {
         IntSeqD divideAndSortD(IntSeqD arr);
         IntSeqD mergeD(IntSeqD arr1, IntSeqD arr2);
     }
+    class Response{
+        long responseTime;
+        string value;
+    }
+
+    interface Callback{
+        void callbackClient(Response response);
+    }
 }
