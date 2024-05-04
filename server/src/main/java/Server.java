@@ -1,59 +1,78 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.List;
+import java.util.Map;
 
 public class Server {
 
-    private static List<Worker> servers = new ArrayList<>();
+    public static BinaryTree<Sorting.SortServicePrx> servers = new BinaryTree<>();
 
+    public static void main(String[] args){
+        int port = 10000;
+        Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
-        
-        try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args)) {
-            String port;
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Ingrese el puerto (10000 para el servidor principal): ");
-            port = scanner.nextLine();
+        try(com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args)){
             com.zeroc.Ice.ObjectAdapter adapter =
-                    communicator.createObjectAdapterWithEndpoints("SimpleSortAdapter", "tcp -p "+port);
-            if (port.equals("10000")) {
-                while (!port.equals("exit")) {
-                    System.out.println("Ingrese el puerto del otro servidor al que desea conectarse (o escriba 'exit' para salir):");
-                    port = scanner.nextLine();
-                    if (!port.equals("exit")) {
-                        connectToServer(port);
+            communicator.createObjectAdapterWithEndpoints("SimpleSortAdapter", "tcp -p " + port);
+            com.zeroc.Ice.Object object = new SorterI();
+
+
+            adapter.add(object, com.zeroc.Ice.Util.stringToIdentity("SimpleSorter"));
+            adapter.activate();
+
+
+            System.out.println("Main  rver started");
+
+            System.out.println("How many server u wanna use?");
+            int servers_amount = Integer.parseInt(scanner.nextLine());
+
+
+            while(servers_amount != 0){
+                try{
+                    port++;
+                    createServer(args, port);
+                    Thread.sleep(1000);                    
+                    com.zeroc.Ice.ObjectPrx base = communicator.stringToProxy("SimpleSorter:tcp -p " + port);
+                    Sorting.SortServicePrx sortService = null;
+                    try {
+                        sortService = Sorting.SortServicePrx.checkedCast(base);
+                    } catch (Exception e) {
+                        System.out.println("Invalid proxy");
                     }
+                    if (sortService != null) {
+                        servers.insert(sortService);
+                        System.out.println("Connected to server");    
+                        servers_amount--;
+                    } else {
+                        System.out.println("Error");
+                    }
+                } catch (Exception e) {
+
                 }
             }
             communicator.waitForShutdown();
-        } catch (Exception e) {
-            System.err.println("Error al iniciar el servidor: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
-    private static void connectToServer(String port) {
-        com.zeroc.Ice.Communicator comm = com.zeroc.Ice.Util.initialize();
-        com.zeroc.Ice.ObjectPrx base = comm.stringToProxy("SimpleSorter:tcp -p " + port);
-        Sorting.SorterPrx sortService = Sorting.SorterPrx.checkedCast(base);
-        if(sortService != null) {
-            //servers.add(sortService);
-            System.out.println("Conexión establecida correctamente con el servidor en el puerto " + port);
-        }else {
-            System.out.println("No se pudo establecer conexión con el servidor en el puerto " + port);
-        }
-        // try {
-        //     sortService = Sorting.SorterPrx.checkedCast(base);
-        // } catch (Exception e) {
-        //     System.out.println("Error al conectarse al servidor: " + e.getMessage());
-        // }
-        // if (sortService != null) {
-        //     servers.add(sortService);
-        //     System.out.println("Conexión establecida correctamente con el servidor en el puerto " + port);
-        // } else {
-        //     System.out.println("No se pudo establecer conexión con el servidor en el puertoX " + port);
-        // }
-    }
+    public static void createServer(String[] args, int port) {
+        new Thread(() -> {
+            try {
+                com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args);
+                com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("SimpleSortAdapter",
+                        "tcp -p " + port);
+                com.zeroc.Ice.Object object = new SorterI();
 
+                adapter.add(object, com.zeroc.Ice.Util.stringToIdentity("SimpleSorter"));
+                adapter.activate();
+
+                System.out.println("Secondary server started");
+            } catch (Exception e) {
+                throw e;
+            }
+
+        }).start();
+    }
 
 }

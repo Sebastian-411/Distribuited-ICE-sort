@@ -1,0 +1,19 @@
+<state>
+  <timestamp value='1714801142317' />
+  <sourceSet name='default'>
+    <source name='D:\ver + local\Distribuited-ICE-sort\sort.ice'>
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\Sorter.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\Response.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\SortService.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\Callback.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\SorterPrx.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\_SorterPrxI.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\SortServicePrx.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\_SortServicePrxI.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\CallbackPrx.java' />
+      <file name='D:\ver + local\Distribuited-ICE-sort\server\build\generated-src\Sorting\_CallbackPrxI.java' />
+    </source>
+    <arg value='C:\Program Files\ZeroC\Ice-3.7.10\\bin\slice2java.exe' />
+    <arg value='-IC:\Program Files\ZeroC\Ice-3.7.10\\slice' />
+  </sourceSet>
+</state>

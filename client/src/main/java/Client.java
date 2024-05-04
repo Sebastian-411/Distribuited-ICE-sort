@@ -1,40 +1,28 @@
 import java.io.BufferedReader;
-import java.util.Scanner;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.zeroc.Ice.ObjectPrx;
-
-import Sorting.CallbackPrx;
-
-
-public class Client{
-    public static void main(String[] args){
-        try(com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args)){
-            com.zeroc.Ice.ObjectPrx base = communicator.stringToProxy("SimpleSorter:tcp -h localhost -p 10000");
-            Sorting.SorterPrx sorter = Sorting.SorterPrx.checkedCast(base);
-            if(sorter == null){
+public class Client {
+    public static void main(String[] args) {
+        try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args)) {
+            com.zeroc.Ice.ObjectPrx base = communicator.stringToProxy("SimpleSorter:tcp -p 10000");
+            Sorting.SortServicePrx sorter = Sorting.SortServicePrx.checkedCast(base);
+            if (sorter == null) {
                 throw new Error("Invalid proxy");
             }
 
-            /*com.zeroc.Ice.ObjectAdapter adapter = communicator.createObjectAdapter("Callback");
-            com.zeroc.Ice.Object object = new CallbackImpl();
-            ObjectPrx prx = adapter.add(object, com.zeroc.Ice.Util.stringToIdentity("CallbackService"));
-            adapter.activate();
-
-            CallbackPrx clprx = CallbackPrx.uncheckedCast(prx);*/
-
             Scanner sc = new Scanner(System.in);
-            System.out.println("What kind of array do you want to order? Type the number: \n 1. Array of integers [7, 5, 3]" 
-            + "\n 2. Array of Strings [A, b, a, D] \n 3. Array of double [2.5, 2.3, 5.0, 5.7, 5.5]");
+            System.out.println("What kind of array do you want to order? Type the number: \n 1. Array of integers [7, 5, 3]"
+                    + "\n 2. Array of Strings [A, b, a, D] \n 3. Array of double [2.5, 2.3, 5.0, 5.7, 5.5]");
             int typeA = sc.nextInt();
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             boolean flag = true;
 
-            if(typeA == 1 || typeA == 2 || typeA == 3){
+            if (typeA == 1 || typeA == 2 || typeA == 3) {
                 System.out.println("Type the array");
-                while(flag){
+                while (flag) {
                     try {
                         String message = br.readLine();
                         if (isValidArray(message)) {
@@ -42,35 +30,36 @@ public class Client{
 
                             switch (typeA) {
                                 case 1:
-                                int[] array = extractIntArray(message);
-                                int[] sortedArray =  sorter.divideAndSort(array);
-                                printSortedArrayI(sortedArray);
-                                break;
+                                    int[] array = extractIntArray(message);
+                                    int[] sortedArray = sorter.intSort(array);
+                                    printSortedArrayI(sortedArray);
+                                    break;
 
                                 case 2:
-                                String[] arrayS = extractStringArray(message);
-                                String[] sortedArrayS = sorter.divideAndSortS(arrayS);
-                                printSortedArrayS(sortedArrayS);
+                                    String[] arrayS = extractStringArray(message);
+                                    String[] sortedArrayS = sorter.stringSort(arrayS);
+                                    printSortedArrayS(sortedArrayS);
+                                    break;
 
                                 case 3:
-                                double[] arrayD = extractDoubleArray(message);
-                                double[] sortedArrayD = sorter.divideAndSortD(arrayD);
-                                printSortedArrayD(sortedArrayD);
-                            }    
+                                    double[] arrayD = extractDoubleArray(message);
+                                    double[] sortedArrayD = sorter.doubleSort(arrayD);
+                                    printSortedArrayD(sortedArrayD);
+                                    break;
+                            }
                         } else {
                             System.out.println("Invalid input. Please type an array of correct.");
                         }
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
-                    }   
+                    }
                 }
-            }
-            else{
+            } else {
                 System.out.println("Incorrect type of data select.");
             }
             sc.close();
             br.close();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -110,7 +99,7 @@ public class Client{
         return parts;
     }
 
-    private static void printSortedArrayI(int[] sArray){
+    private static void printSortedArrayI(int[] sArray) {
         System.out.print("Sorted Array: [");
         for (int num : sArray) {
             System.out.print(num + " ");
@@ -119,7 +108,7 @@ public class Client{
         System.out.println();
     }
 
-    private static void printSortedArrayS(String[] sArray){
+    private static void printSortedArrayS(String[] sArray) {
         System.out.print("Sorted Array: [");
         for (String num : sArray) {
             System.out.print(num + " ");
@@ -128,7 +117,7 @@ public class Client{
         System.out.println();
     }
 
-    private static void printSortedArrayD(double[] sArray){
+    private static void printSortedArrayD(double[] sArray) {
         System.out.print("Sorted Array: [");
         for (double num : sArray) {
             System.out.print(num + " ");
