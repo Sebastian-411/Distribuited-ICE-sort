@@ -16,11 +16,6 @@ public class Server {
             port = scanner.nextLine();
             com.zeroc.Ice.ObjectAdapter adapter =
                     communicator.createObjectAdapterWithEndpoints("SimpleSortAdapter", "tcp -p "+port);
-            com.zeroc.Ice.Object object = new SorterI();
-            adapter.add(object, com.zeroc.Ice.Util.stringToIdentity("SimpleSorter"));
-            adapter.activate();
-            System.out.println("Servidor iniciado correctamente.");
-
             if (port.equals("10000")) {
                 while (!port.equals("exit")) {
                     System.out.println("Ingrese el puerto del otro servidor al que desea conectarse (o escriba 'exit' para salir):");
